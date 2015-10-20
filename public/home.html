@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="page-header">Hello {{ home.greeting }}!</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <p>Here is where we might put some information</p>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-3">
+        <p>And of course stuff such as inputs: </p>
+    </div>
+    <div class="col-md-2">
+        <input class="form-control" type="text" ng-model="home.model.text">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <p>And what else can we use here?</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <p>... buttons!</p>
+    </div>
+    <div class="col-md-2">
+        <button type="button" class="btn btn-primary" ng-click="home.buttonClicked()">Click me</button>
+    </div>
+</div>
