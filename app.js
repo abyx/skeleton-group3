@@ -96,9 +96,10 @@ function parseBookingRequest(commandWords) {
           break;
 
         case 'on' :
-          break;
+          i++;
           bookingRequest.departureDate = commandWords[i];
           console.log('departureDate parsed: ' + bookingRequest.departureDate);
+          break;
         case 'return' :
           i++;
           if(commandWords[i] !== 'on') {
@@ -115,6 +116,7 @@ function parseBookingRequest(commandWords) {
             throw "'passangers' word not found";
           }
           console.log('pax parsed: ' + bookingRequest.pax);
+          break;
       }
    }
 
