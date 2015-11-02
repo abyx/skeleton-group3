@@ -27,6 +27,12 @@ app.post('/another/example', function(request, response) {
   response.redirect('/example');
 });
 
+
+app.post('/tada', function(request, response) {   
+  console.log(request.body.clientCommand);
+  response.sendStatus(200);
+});
+
 function resultToJson(result) {
   return _.merge({id: result._id}, result._source);
 }
