@@ -15,7 +15,7 @@ app.param('id', function(req, res, next) {
 });
 
 app.get('/example', function(request, response) {
-  response.send({success: isFlightInText("הזנתטיסהנאות")});
+  response.send({success: "true"});
 });
 
 app.post('/example/:id', function(request, response) {
