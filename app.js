@@ -71,7 +71,7 @@ function getResourceById(id) {
 
 function isFlightInText(str)
 {
-  if (str.search(" טיסה ") < 0)
+  if (str.search("book flight") < 0)
     return false;
   else
     return true;
