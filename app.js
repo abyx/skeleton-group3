@@ -33,7 +33,9 @@ app.post('/tada', function(request, response) {
 
   var clientCommand = request.body.clientCommand;
   if(isFlightInText(clientCommand)) {
-    response.sendStatus(200);
+    //response.sendStatus(200);
+    var commandResponse = parseClientCommand(clientCommand);
+    response.send(commandResponse);
   }
   else {
     response.sendStatus(400);  
@@ -47,30 +49,78 @@ function resultToJson(result) {
 
 function parseClientCommand(clientCommand) {
   var commandWords = clientCommand.split(' ');
-  switch(commandWords[0]) {
-    case 'book flight' :
-      var bookingRequest = parseBookingRequest(commandWords);
-      var bookingResponse = bookFlight(bookingRequest);
-      break;
+  var commandResponse;
+  try {
+    switch(commandWords[0]) {
+      case 'book' :
+        var bookingRequest = parseBookingRequest(commandWords);
+        commandResponse = bookFlight(bookingRequest);
+        break;
 
-    case 'find flight' :
+      case 'search' :
 
-      break;
+        break;
 
-    case 'cancel booking' :
-      break;
+      case 'cancel' :
+        break;
+    }    
+    return commandResponse;
+  }
+  catch(err) {
+
+    return {
+      error : err
+    };
   }
 }
 
 function parseBookingRequest(commandWords) {
-  return {
-    origin : "Tel Aviv",
-    destination : "Berlin",
-    departureDate : "01/11/2015",
-    returnDate : "10/11/2015",
-    pax : 4,
-    maxPrice : 300
-  }
+   var bookingRequest = new Object();
+   
+   if(commandWords[1] !== 'flight') {
+      throw "'flight' world not found";
+   }
+
+
+   for(var i = 2 ; i < commandWords.length ; i++) {
+      switch(commandWords[i]) {
+        case 'from' :
+          i++;
+          bookingRequest.origin = commandWords[i];
+          console.log('origin parsed: ' + bookingRequest.origin);
+          break;
+        case 'to' :
+          i++;
+          bookingRequest.destination = commandWords[i];
+          console.log('destination parsed: ' + bookingRequest.destination);
+          break;
+
+        case 'on' :
+          break;
+          bookingRequest.departureDate = commandWords[i];
+          console.log('departureDate parsed: ' + bookingRequest.departureDate);
+        case 'return' :
+          i++;
+          if(commandWords[i] !== 'on') {
+            throw "'on' word not found in return statement";
+          }
+          i++
+          bookingRequest.returnDate = commandWords[i];
+          console.log('returnDate parsed: ' + bookingRequest.returnDate);
+        case 'for' :
+          i++;
+          bookingRequest.pax = parsInt(commandWords[i]);
+          i++;
+          if(commandWords[i] !== 'passangers') {
+            throw "'passangers' word not found";
+          }
+          console.log('pax parsed: ' + bookingRequest.pax);
+      }
+   }
+
+
+   return bookingRequest;
+  
 }
 
 
