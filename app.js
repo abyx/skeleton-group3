@@ -33,7 +33,9 @@ app.post('/tada', function(request, response) {
 
   var clientCommand = request.body.clientCommand;
   if(isFlightInText(clientCommand)) {
-    response.sendStatus(200);
+    //response.sendStatus(200);
+    var commandResponse = parseClientCommand(clientCommand);
+    response.send(commandResponse);
   }
   else {
     response.sendStatus(400);  
@@ -47,21 +49,37 @@ function resultToJson(result) {
 
 function parseClientCommand(clientCommand) {
   var commandWords = clientCommand.split(' ');
-  switch(commandWords[0]) {
-    case 'book flight' :
-      var bookingRequest = parseBookingRequest(commandWords);
-      var bookingResponse = bookFlight(bookingRequest);
-      break;
+  var commandResponse;
+  try {
+    switch(commandWords[0]) {
+      case 'book' :
+        var bookingRequest = parseBookingRequest(commandWords);
+        commandResponse = bookFlight(bookingRequest);
+        break;
 
+<<<<<<< HEAD
     case 'search' :
     console.log("in case search flight " );
      var SearchFlightRequest = parseSearchFlightRequest(commandWords);
      var SearchFlightResponse = findMyFilghtBro(SearchFlightRequest);
     
       break;
+=======
+      case 'search' :
 
-    case 'cancel booking' :
-      break;
+        break;
+>>>>>>> 0661174806a7c5d09da7fc4f2202d4d682c67643
+
+      case 'cancel' :
+        break;
+    }    
+    return commandResponse;
+  }
+  catch(err) {
+
+    return {
+      error : err
+    };
   }
 }
 
@@ -127,14 +145,54 @@ function getFlightNumber()
 }
 
 function parseBookingRequest(commandWords) {
-  return {
-    origin : "Tel Aviv",
-    destination : "Berlin",
-    departureDate : "01/11/2015",
-    returnDate : "10/11/2015",
-    pax : 4,
-    maxPrice : 300
-  }
+   var bookingRequest = new Object();
+   
+   if(commandWords[1] !== 'flight') {
+      throw "'flight' world not found";
+   }
+
+
+   for(var i = 2 ; i < commandWords.length ; i++) {
+      switch(commandWords[i]) {
+        case 'from' :
+          i++;
+          bookingRequest.origin = commandWords[i];
+          console.log('origin parsed: ' + bookingRequest.origin);
+          break;
+        case 'to' :
+          i++;
+          bookingRequest.destination = commandWords[i];
+          console.log('destination parsed: ' + bookingRequest.destination);
+          break;
+
+        case 'on' :
+          i++;
+          bookingRequest.departureDate = commandWords[i];
+          console.log('departureDate parsed: ' + bookingRequest.departureDate);
+          break;
+        case 'return' :
+          i++;
+          if(commandWords[i] !== 'on') {
+            throw "'on' word not found in return statement";
+          }
+          i++
+          bookingRequest.returnDate = commandWords[i];
+          console.log('returnDate parsed: ' + bookingRequest.returnDate);
+        case 'for' :
+          i++;
+          bookingRequest.pax = parsInt(commandWords[i]);
+          i++;
+          if(commandWords[i] !== 'passangers') {
+            throw "'passangers' word not found";
+          }
+          console.log('pax parsed: ' + bookingRequest.pax);
+          break;
+      }
+   }
+
+
+   return bookingRequest;
+  
 }
 
 function parseSearchFlightRequest(commandWords) {
