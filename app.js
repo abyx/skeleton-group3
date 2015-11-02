@@ -65,6 +65,67 @@ function parseClientCommand(clientCommand) {
   }
 }
 
+function bookFlight(bookingRequest)
+{
+  if (bookingRequest.origin != null && isLocationExist(bookingRequest.origin) && 
+      bookingRequest.destination != null && isLocationExist(bookingRequest.destination) &&
+      bookingRequest.departureDate != null && bookingRequest.returnDate != null &&
+      bookingRequest.pax != null && bookingRequest.maxPrice != null)
+  {
+    return {status:true,message:"",flightNumber:getFlightNumber()};
+  }
+  else
+  {
+    return {status:false,message:getBookFlightErrorMessage(bookingRequest),flightNumber:""};
+  }
+}
+
+function getBookFlightErrorMessage(bookingRequest)
+{
+  if(bookingRequest.origin == null || !isLocationExist(bookingRequest.origin))
+  {
+    return "The original location is missing";
+  }
+  else if(bookingRequest.destination == null || !isLocationExist(bookingRequest.destination))
+  {
+    return "The destination location is missing";
+  }
+  else if(bookingRequest.departureDate == null || bookingRequest.returnDate == null)
+  {
+    return "The date of the flight is missing";
+  }
+  else if(bookingRequest.pax == null)
+  {
+    return "The number of passangers is missing";
+  }
+  else if(bookingRequest.maxPrice == null)
+  {
+    return "The price is missing";
+  }
+}
+
+function isLocationExist(str)
+{
+  // TODO: Check is location exists in the DB
+  return true;
+}
+
+function getFlightNumber()
+{
+    var text = "";
+    var possibleFlightName = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    var possibleFlightNum = "0123456789";
+
+    for( var i=0; i < 2; i++ )
+        text += possibleFlightName.charAt(Math.floor(Math.random() * possibleFlightName.length));
+
+    for( var i=0; i < 3; i++ )
+        text += possibleFlightNum.charAt(Math.floor(Math.random() * possibleFlightNum.length));
+    
+
+    return text;
+}
+
 function parseBookingRequest(commandWords) {
   return {
     origin : "Tel Aviv",
