@@ -69,6 +69,13 @@ function getResourceById(id) {
   });
 }
 
+function isFlightInText(str)
+{
+  if str.search("טיסה") < 0
+    return false;
+  else
+    return true;
+}
 app.route('/resources/:id')
   .get(function(request, response) {
     getResourceById(request.params.id).then(function(result) {
