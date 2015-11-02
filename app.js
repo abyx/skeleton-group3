@@ -53,7 +53,7 @@ function parseClientCommand(clientCommand) {
   try {
     switch(commandWords[0]) {
       case 'book' :
-        var bookingRequest = parseBookingRequest(commandWords);
+        var bookingRequest = parseBookingRequest(commandWords);        
         commandResponse = bookFlight(bookingRequest);
         break;
 
@@ -172,12 +172,17 @@ function parseBookingRequest(commandWords) {
           break;
         case 'for' :          
           i++;
-          bookingRequest.pax = parsInt(commandWords[i]);          
+          bookingRequest.pax = commandWords[i];// parsInt(commandWords[i]);          
           i++;          
           if(commandWords[i] !=  'passangers') {
             throw "'passangers' word not found";
           }
           console.log('pax parsed: ' + bookingRequest.pax);
+          break;
+        case 'till' :
+          i++;
+          bookingRequest.maxPrice = commandWords[i];
+          console.log('maxPrice parsed: ' + bookingRequest.maxPrice);
           break;
       }
    }
