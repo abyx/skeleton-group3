@@ -57,18 +57,14 @@ function parseClientCommand(clientCommand) {
         commandResponse = bookFlight(bookingRequest);
         break;
 
-<<<<<<< HEAD
+
     case 'search' :
     console.log("in case search flight " );
      var SearchFlightRequest = parseSearchFlightRequest(commandWords);
      var SearchFlightResponse = findMyFilghtBro(SearchFlightRequest);
     
       break;
-=======
-      case 'search' :
 
-        break;
->>>>>>> 0661174806a7c5d09da7fc4f2202d4d682c67643
 
       case 'cancel' :
         break;
