@@ -15,7 +15,7 @@ app.param('id', function(req, res, next) {
 });
 
 app.get('/example', function(request, response) {
-  response.send({success: true});
+  response.send({success: isFlightInText("הזנתטיסהנאות")});
 });
 
 app.post('/example/:id', function(request, response) {
@@ -75,6 +75,13 @@ function getResourceById(id) {
   });
 }
 
+function isFlightInText(str)
+{
+  if (str.search(" טיסה ") < 0)
+    return false;
+  else
+    return true;
+}
 app.route('/resources/:id')
   .get(function(request, response) {
     getResourceById(request.params.id).then(function(result) {
