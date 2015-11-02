@@ -33,20 +33,46 @@ app.post('/tada', function(request, response) {
 
   var clientCommand = request.body.clientCommand;
   if(isFlightInText(clientCommand)) {
-    response.sendStatus(200);    
+    response.sendStatus(200);
   }
   else {
     response.sendStatus(400);  
   }
-
-  
-
-
 });
 
 function resultToJson(result) {
   return _.merge({id: result._id}, result._source);
 }
+
+
+function parseClientCommand(clientCommand) {
+  var commandWords = clientCommand.split(' ');
+  switch(commandWords[0]) {
+    case 'book flight' :
+      var bookingRequest = parseBookingRequest(commandWords);
+      var bookingResponse = bookFlight(bookingRequest);
+      break;
+
+    case 'find flight' :
+
+      break;
+
+    case 'cancel booking' :
+      break;
+  }
+}
+
+function parseBookingRequest(commandWords) {
+  return {
+    origin : "Tel Aviv",
+    destination : "Berlin",
+    departureDate : "01/11/2015",
+    returnDate : "10/11/2015",
+    pax : 4,
+    maxPrice : 300
+  }
+}
+
 
 app.route('/resources')
   .get(function(request, response) {
