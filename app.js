@@ -27,6 +27,23 @@ app.post('/another/example', function(request, response) {
   response.redirect('/example');
 });
 
+
+app.post('/tada', function(request, response) {   
+  console.log(request.body.clientCommand);
+
+  var clientCommand = request.body.clientCommand;
+  if(isFlightInText(clientCommand)) {
+    response.sendStatus(200);    
+  }
+  else {
+    response.sendStatus(400);  
+  }
+
+  
+
+
+});
+
 function resultToJson(result) {
   return _.merge({id: result._id}, result._source);
 }
