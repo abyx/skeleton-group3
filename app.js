@@ -57,18 +57,19 @@ function parseClientCommand(clientCommand) {
         commandResponse = bookFlight(bookingRequest);
         break;
 
-<<<<<<< HEAD
+
     case 'search' :
     console.log("in case search flight " );
-     var SearchFlightRequest = parseSearchFlightRequest(commandWords);
-     var SearchFlightResponse = findMyFilghtBro(SearchFlightRequest);
-    
-      break;
-=======
+     var searchFlightRequest = parseSearchFlightRequest(commandWords);
+   
+     commandResponse = findMyFilghtBro(searchFlightRequest);
+     console.log("redirect URL is : " + commandResponse);
+     break;
+
       case 'search' :
 
         break;
->>>>>>> 0661174806a7c5d09da7fc4f2202d4d682c67643
+
 
       case 'cancel' :
         break;
@@ -208,13 +209,11 @@ function parseSearchFlightRequest(commandWords) {
 
 function findMyFilghtBro(flightSearchRequest) {
   
- // var redirectUrl = "https://www.google.com/flights/#search;f=TLV;t=BER,TXL,SXF,QPP;d=2015-11-18;r=2015-11-22"
-  console.log("url to redirect : " );
-  return
-  {
-        redirectUrl : "https://www.google.com/flights/#search;f=TLV;t=BER,TXL,SXF,QPP;d=2015-11-18;r=2015-11-22"
+  var redirectUrl1 = "https://www.google.com/flights/#search;f=TLV;t=BER,TXL,SXF,QPP;d=2015-11-18;r=2015-11-22"
+ // console.log("url to redirect : " + redirectUrl1 );
+  return{
+    url : redirectUrl1
   }
-
 }
 
 
