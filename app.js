@@ -166,14 +166,15 @@ function parseBookingRequest(commandWords) {
           if(commandWords[i] !== 'on') {
             throw "'on' word not found in return statement";
           }
-          i++
+          i++;
           bookingRequest.returnDate = commandWords[i];
           console.log('returnDate parsed: ' + bookingRequest.returnDate);
-        case 'for' :
+          break;
+        case 'for' :          
           i++;
-          bookingRequest.pax = parsInt(commandWords[i]);
-          i++;
-          if(commandWords[i] !== 'passangers') {
+          bookingRequest.pax = parsInt(commandWords[i]);          
+          i++;          
+          if(commandWords[i] !=  'passangers') {
             throw "'passangers' word not found";
           }
           console.log('pax parsed: ' + bookingRequest.pax);
