@@ -30,7 +30,18 @@ app.post('/another/example', function(request, response) {
 
 app.post('/tada', function(request, response) {   
   console.log(request.body.clientCommand);
-  response.sendStatus(200);
+
+  var clientCommand = request.body.clientCommand;
+  if(isFlightInText(clientCommand)) {
+    response.sendStatus(200);    
+  }
+  else {
+    response.sendStatus(400);  
+  }
+
+  
+
+
 });
 
 function resultToJson(result) {
