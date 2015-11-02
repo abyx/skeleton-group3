@@ -53,8 +53,11 @@ function parseClientCommand(clientCommand) {
       var bookingResponse = bookFlight(bookingRequest);
       break;
 
-    case 'find flight' :
-
+    case 'search' :
+    console.log("in case search flight " );
+     var SearchFlightRequest = parseSearchFlightRequest(commandWords);
+     var SearchFlightResponse = findMyFilghtBro(SearchFlightRequest);
+    
       break;
 
     case 'cancel booking' :
@@ -71,6 +74,28 @@ function parseBookingRequest(commandWords) {
     pax : 4,
     maxPrice : 300
   }
+}
+
+function parseSearchFlightRequest(commandWords) {
+  return {
+    origin : "Tel Aviv",
+    destination : "Berlin",
+    departureDate : "01/11/2015",
+    returnDate : "10/11/2015",
+    pax : 4,
+    maxPrice : 300
+  }
+}
+
+function findMyFilghtBro(flightSearchRequest) {
+  
+ // var redirectUrl = "https://www.google.com/flights/#search;f=TLV;t=BER,TXL,SXF,QPP;d=2015-11-18;r=2015-11-22"
+  console.log("url to redirect : " );
+  return
+  {
+        redirectUrl : "https://www.google.com/flights/#search;f=TLV;t=BER,TXL,SXF,QPP;d=2015-11-18;r=2015-11-22"
+  }
+
 }
 
 
@@ -114,7 +139,7 @@ function getResourceById(id) {
 
 function isFlightInText(str)
 {
-  if (str.search("book flight") < 0)
+  if (str.search("book flight") < 0 &&  str.search("search flight") < 0)
     return false;
   else
     return true;
