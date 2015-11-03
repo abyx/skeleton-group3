@@ -20,13 +20,16 @@ angular.module('app').config(function($routeProvider) {
     .otherwise({redirectTo: '/'});
 });
 
-angular.module('app').controller('TadaCtrlMain',function(){
+angular.module('app').controller('TadaCtrlMain',function($http){
   var self = this;
   self.clientCommand ='';
   self.sendClientCommand = function(){
-   var request =  $http.post("/tada/go", { "clientCommand" : self.clientCommand});
+   $http.post("/tada/go", { "clientCommand" : self.clientCommand}).then (
+    function(response){
+      console.log("http post sent");
+    });
 
-   request.success()
+   
   }
 
 });
