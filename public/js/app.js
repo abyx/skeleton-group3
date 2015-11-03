@@ -45,8 +45,11 @@ angular.module('app').controller('TadaCtrlMain',function($http, $scope){
     function(response){
       console.log("http post sent");
     });
+  };
 
-   
-  }
-
+  self.onFocus = function() {     
+    if(self.clientCommand.length === 0) {      
+      self.sendAutoComplete();
+    }
+  };
 });

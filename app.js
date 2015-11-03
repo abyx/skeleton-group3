@@ -202,7 +202,7 @@ function parseBookingRequest(commandWords) {
    }
 
 
-   return bookingRequest;
+   return bookingRequest;  
   
 }
 
