@@ -15,6 +15,17 @@
         <script src="/js/home.js"></script>
         <script src="/js/view1.js"></script>
         <script src="/js/view2.js"></script>
+
+        <script src="/Lib/bootstrap-gh-pages/ui-bootstrap-custom-tpls-0.14.3.min.js"></script>
+
+
+
+
+
+
+
+
+
     </head>
 
     <body ng-controller="TadaCtrlMain as main" >
@@ -23,9 +34,10 @@
                     font-family: Arial Black; font-size: 24px; 
                     color: red" align="center"> TADA</div>
         <DIV  align="center" STYLE="margin-top: 100px;">
-            <input type="text" ng-model="main.clientCommand" size="100">
+            <input type="text" ng-model="main.clientCommand" size="100" uib-typeahead="option for option in main.autoCompleteOptions">
             <input type="button" ng-click="main.sendClientCommand()" value="Go !">
         </DIV>
         <div  align="center">{{ main.clientCommand.status }}</div>
+
     </body>
 </html>

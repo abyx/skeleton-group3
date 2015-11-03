@@ -1,4 +1,4 @@
-angular.module('app', ['ngRoute']);
+angular.module('app', ['ngRoute','ui.bootstrap']);
 
 angular.module('app').config(function($routeProvider) {
   $routeProvider
@@ -23,6 +23,10 @@ angular.module('app').config(function($routeProvider) {
 angular.module('app').controller('TadaCtrlMain',function($http){
   var self = this;
   self.clientCommand ='';
+  self.autoCompleteOptions = [
+    'book a flight',
+    'go home'
+  ];
   self.sendClientCommand = function(){
    $http.post("/tada/go", { "clientCommand" : self.clientCommand}).then (
     function(response){
