@@ -20,9 +20,26 @@ angular.module('app').config(function($routeProvider) {
     .otherwise({redirectTo: '/'});
 });
 
-angular.module('app').controller('TadaCtrlMain',function($http){
+angular.module('app').controller('TadaCtrlMain',function($http, $scope){
   var self = this;
   self.clientCommand ='';
+
+  self.sendAutoComplete = function() {
+      $http.post("/tada/autoComplete", { "clientPartialCommand" : self.clientCommand, "clientCursorPosition" : 0 }).
+        then(function(response) {
+          self.autoCompleteOptions = response.data;
+        });
+
+   };
+
+  $scope.$watch('main.clientCommand', function(newValue) {
+      console.log(newValue);
+      if(angular.isDefined(newValue) && newValue[newValue.length - 1] === ' ') {              
+        self.sendAutoComplete();
+      }
+  });
+
+
   self.sendClientCommand = function(){
    $http.post("/tada/go", { "clientCommand" : self.clientCommand}).then(function(response){
                console.log("Success!")
