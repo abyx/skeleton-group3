@@ -33,7 +33,7 @@ angular.module('app').controller('TadaCtrlMain',function($http, $scope){
    };
 
   $scope.$watch('main.clientCommand', function(newValue) {
-      console.log(newValue);
+      self.status = '';
       if(angular.isDefined(newValue) && newValue[newValue.length - 1] === ' ') {              
         self.sendAutoComplete();
       }
