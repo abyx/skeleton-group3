@@ -193,7 +193,7 @@ function parseBookingRequest(commandWords) {
           }
           console.log('pax parsed: ' + bookingRequest.pax);
           break;
-        case 'till' :
+        case 'maxprice' :
           i++;
           bookingRequest.maxPrice = commandWords[i];
           console.log('maxPrice parsed: ' + bookingRequest.maxPrice);
@@ -241,7 +241,20 @@ function getAutoCompleteOptions(clientPartialCommand, clientCursorPosition) {
                clientPartialCommand + ' car' ];
     }
 
-    var autoCompleteOptionsDefault = ['to', 'from', 'on', 'return on', 'for', 'till']
+    var autoCompleteOptionsDefault = ['to', 'from', 'on', 'return on', 'for', 'maxprice'];
+
+    if(autoCompleteOptionsDefault.indexOf(clientPartialCommandWords[clientPartialCommandWords.length - 2]) >= 0) {
+        return [];
+    }
+
+    if(clientPartialCommandWords[clientPartialCommandWords.length - 2] === 'return') {
+      return [clientPartialCommand + ' ' + ' on'];
+    }
+
+    if(clientPartialCommandWords[clientPartialCommandWords.length - 3] === 'for') {
+      return [clientPartialCommand + ' ' + ' passangers'];
+    }    
+    
     var autoCompleteOptions = [];
 
       for(var i in autoCompleteOptionsDefault) {
@@ -294,6 +307,7 @@ function getResourceById(id) {
 
 function isFlightInText(str)
 {
+  console.log(str);
   if (str.search("book flight") < 0 &&  str.search("search flight") < 0)
     return false;
   else
