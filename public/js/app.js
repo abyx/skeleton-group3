@@ -40,15 +40,11 @@ angular.module('app').controller('TadaCtrlMain',function($http, $scope){
   });
 
   self.mySendAutoComplete =  function(newValue) {
-    console.log("In mySendAutoComplete " + " newValue= " + newValue + " trimmed= " + newValue.replace(/\s{2,}/g, ' '));
       self.status = '';
-      if(angular.isDefined(newValue) && newValue[newValue.length - 1] === ' ') {  
-        console.log("sending autocomplete");            
+      if(angular.isDefined(newValue) && newValue[newValue.length - 1] === ' ') {             
         return $http.post("/tada/autoComplete", { "clientPartialCommand" : newValue.replace(/\s{2,}/g, ' '), "clientCursorPosition" : 0 }).
         then(function(response) {
-          console.log("sent autocomplete. options: "+response.data);
           return response.data;
-
         });
         
       }
