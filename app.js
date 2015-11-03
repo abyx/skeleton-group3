@@ -28,7 +28,7 @@ app.post('/another/example', function(request, response) {
 });
 
 
-app.post('/tada', function(request, response) {   
+app.post('/tada/go', function(request, response) {   
   console.log(request.body.clientCommand);
 
   var clientCommand = request.body.clientCommand;
@@ -40,6 +40,15 @@ app.post('/tada', function(request, response) {
   else {
     response.sendStatus(400);  
   }
+});
+
+app.post('/tada/autoComplete', function(request, response) {
+  console.log(request.body.clientPartialCommand);
+  console.log(request.body.clientCursorPosition);
+  var clientPartialCommand = request.body.clientPartialCommand;
+  var clientCursorPosition = request.body.clientCursorPosition;
+  var autoCompleteOptions = getAutoCompleteOptions(clientPartialCommand, clientCursorPosition);
+  response.send(autoCompleteOptions);
 });
 
 function resultToJson(result) {
@@ -59,13 +68,13 @@ function parseClientCommand(clientCommand) {
 
 
     case 'search' :
-    console.log("in case search flight " );
-     var SearchFlightRequest = parseSearchFlightRequest(commandWords);
-     var SearchFlightResponse = findMyFilghtBro(SearchFlightRequest);
-    
-      break;
-
-
+       console.log("in case search flight " );
+       var searchFlightRequest = parseSearchFlightRequest(commandWords);
+   
+       commandResponse = findMyFilghtBro(searchFlightRequest);
+       console.log("redirect URL is : " + commandResponse);
+     break;
+      
       case 'cancel' :
         break;
     }    
@@ -210,13 +219,38 @@ function parseSearchFlightRequest(commandWords) {
 
 function findMyFilghtBro(flightSearchRequest) {
   
- // var redirectUrl = "https://www.google.com/flights/#search;f=TLV;t=BER,TXL,SXF,QPP;d=2015-11-18;r=2015-11-22"
-  console.log("url to redirect : " );
-  return
-  {
-        redirectUrl : "https://www.google.com/flights/#search;f=TLV;t=BER,TXL,SXF,QPP;d=2015-11-18;r=2015-11-22"
+  var redirectUrl1 = "https://www.google.com/flights/#search;f=TLV;t=BER,TXL,SXF,QPP;d=2015-11-18;r=2015-11-22"
+ // console.log("url to redirect : " + redirectUrl1 );
+  return{
+    url : redirectUrl1
   }
+}
 
+function getAutoCompleteOptions(clientPartialCommand, clientCursorPosition) {
+    if(clientPartialCommand === '') {
+      return [ 'book', 'search', 'cancel'];
+    }
+
+    var clientPartialCommandWords = clientPartialCommand.split(' ');
+
+    console.log(clientPartialCommandWords);
+
+    if(clientPartialCommandWords.length === 2 && clientPartialCommandWords[1] === '') {
+      return [ clientPartialCommand + ' flight', 
+               clientPartialCommand + ' hotel',
+               clientPartialCommand + ' car' ];
+    }
+
+    var autoCompleteOptionsDefault = ['to', 'from', 'on', 'return on', 'for', 'till']
+    var autoCompleteOptions = [];
+
+      for(var i in autoCompleteOptionsDefault) {
+      if(clientPartialCommand.search(autoCompleteOptionsDefault[i]) < 0) {
+         autoCompleteOptions.push(clientPartialCommand + ' ' + autoCompleteOptionsDefault[i]);
+      }
+    }
+
+    return autoCompleteOptions;
 }
 
 
