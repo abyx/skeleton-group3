@@ -17,14 +17,15 @@
         <script src="/js/view2.js"></script>
     </head>
 
-    <body>
+    <body ng-controller="TadaCtrlMain as main" >
+
         <DIV STYLE="margin-top: 34px; 
                     font-family: Arial Black; font-size: 24px; 
                     color: red" align="center"> TADA</div>
         <DIV  align="center" STYLE="margin-top: 100px;">
-            <input type="text" ng-model="main.myModel.text" size="100">
-            <input type="button" ng-click="executeCommand()" value="submit">
+            <input type="text" ng-model="main.clientCommand.text" size="100">
+            <input type="button" ng-click="sendClientCommand()" value="Go !">
         </DIV>
-        <div  align="center">{{ main.myModel.status }}</div>
+        <div  align="center">{{ main.clientCommand.status }}</div>
     </body>
 </html>

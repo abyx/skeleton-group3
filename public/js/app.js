@@ -19,3 +19,14 @@ angular.module('app').config(function($routeProvider) {
     })
     .otherwise({redirectTo: '/'});
 });
+
+angular.module('app').controller('TadaCtrlMain',function(){
+  var self = this;
+  self.clientCommand ='';
+  self.sendClientCommand = function(){
+   var request =  $http.post("/tada/go", { "clientCommand" : self.clientCommand});
+
+   request.success()
+  }
+
+});
