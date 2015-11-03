@@ -26,6 +26,8 @@
             <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()">
             <input type="button" ng-click="main.sendClientCommand()" value="Go !">
         </DIV>
-        <div  align="center">{{ main.clientCommand.status }}</div>
+        <div  align="center">{{ main.status }}</div>
+
+        <div  align="center">{{ main.autoCompleteOptions }}</div>        
     </body>
 </html>
