@@ -23,7 +23,7 @@
                     font-family: Arial Black; font-size: 24px; 
                     color: red" align="center"> TADA</div>
         <DIV  align="center" STYLE="margin-top: 100px;">
-            <input type="text" ng-model="main.clientCommand" size="100">
+            <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100">
             <input type="button" ng-click="main.sendClientCommand()" value="Go !">
         </DIV>
         <div  align="center">{{ main.clientCommand.status }}</div>
