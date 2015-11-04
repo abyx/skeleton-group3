@@ -38,12 +38,10 @@
                     color: #5CB3FF" align="center"> All your Dreams in ONE command line</div>
         <DIV  align="center" STYLE="margin-top: 100px;">
 
-            <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()" uib-typeahead="option for option in main.sendAutoComplete($viewValue)" >
-            <input type="button" ng-click="main.sendClientCommand()" value="Go !">
-<<<<<<< HEAD
-=======
+            <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()" uib-typeahead="option for option in main.sendAutoComplete($viewValue)" class="form-control" >
+            <input type="button" ng-click="main.sendClientCommand()" value="Go !" class="btn btn-primary">
             <div style="color:blue; margin: 10px">{{main.status}}</div>
->>>>>>> c62ed8114844b39326c33dcce21d79b17a14adde
+
 
     </body>
 </html>
