@@ -21,15 +21,17 @@
 
     <body ng-controller="TadaCtrlMain as main" >
 
-        <DIV STYLE="margin-top: 34px; 
+        <DIV STYLE="margin-top: 54px; 
                     font-family: Arial Black; font-size: 24px; 
                     color: red" align="center"> TADA</div>
+        <DIV STYLE="margin-top: 34px; 
+                    font-family: Arial Black; font-size: 24px; 
+                    color: blue" align="center"> All your Dreams in ONE command line</div>
         <DIV  align="center" STYLE="margin-top: 100px;">
 
             <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()" uib-typeahead="option for option in main.sendAutoComplete($viewValue)" >
             <input type="button" ng-click="main.sendClientCommand()" value="Go !">
 
-        </DIV>
-        <div  align="center" >{{ main.status }}</div>
+
     </body>
 </html>
