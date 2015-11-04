@@ -38,7 +38,9 @@ app.post('/tada/go', function(request, response) {
     response.send(commandResponse);
   }
   else {
-    response.sendStatus(400);  
+    var commandResponse = {error:"'flight' world not found"};
+    console.log(commandResponse);
+    response.status(400).send(commandResponse);  
   }
 });
 
@@ -55,9 +57,18 @@ function resultToJson(result) {
   return _.merge({id: result._id}, result._source);
 }
 
+/*Array.prototype.removeEmptyCells = function() 
+{
+  for (var i = 0; i < this.length; i++) {
+    if (this[i] == null || this[i] == '')
+    {
+      this.splice(i,1);
+    }
+  };
+}*/
 
 function parseClientCommand(clientCommand) {
-  var commandWords = clientCommand.split(' ');
+  var commandWords = clientCommand.split(' ');//.removeEmptyCells();
   var commandResponse;
   try {
     switch(commandWords[0]) {

@@ -32,7 +32,7 @@
             <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()" uib-typeahead="option for option in main.mySendAutoComplete($viewValue)" >
             <input type="button" ng-click="main.sendClientCommand()" value="Go !">
         </DIV>
-        <div  align="center">{{ main.status }}</div>
+        <div  align="center" >{{ main.status }}</div>
 
         <div  align="center">{{ main.autoCompleteOptions }}</div> 
 

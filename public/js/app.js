@@ -52,19 +52,19 @@ angular.module('app').controller('TadaCtrlMain',function($http, $scope){
 
 
   self.sendClientCommand = function(){
-   $http.post("/tada/go", { "clientCommand" : self.clientCommand.replace(/\s{2,}/g, ' ')}).then(function(response){
-               console.log("Success!")
-               console.log(response)
-              // status = parseInt(status)
-               if (response.status == "200" && response.data.message == "") {
-                   console.log("Flight number is : " + response.data.flightNumber);
-                   self.status = "Have A Wonderful Flight , Your Flight number is : " + response.data.flightNumber
-                }
-
-    
- },function(response){
-
- });
+     $http.post("/tada/go", { "clientCommand" : self.clientCommand.replace(/\s{2,}/g, ' ')}).then(function(response){
+                 console.log("Success!")
+                 console.log(response)
+                // status = parseInt(status)
+                 if (response.status == "200" && response.data.message == "") {
+                     console.log("Flight number is : " + response.data.flightNumber);
+                     self.status = "Have A Wonderful Flight , Your Flight number is : " + response.data.flightNumber
+                  }
+      
+      },function(rejection){
+        console.log("Fail!", rejection)
+        self.status = rejection.data.error;
+   });
   };
 
   self.onFocus = function() {     
