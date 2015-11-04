@@ -34,13 +34,15 @@
                     color: black" align="center"> All your Dreams in ONE command line</div>
         <DIV  align="center" STYLE="margin-top: 100px;">
 
-        <form  ng-submit="main.sendClientCommand()" >
-            <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()" uib-typeahead="option for option in main.sendAutoComplete($viewValue)" >
+            <form  ng-submit="main.sendClientCommand()" >
+                <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()" uib-typeahead="option for option in main.sendAutoComplete($viewValue)" >
 
-            <input type="submit" value="Go !"  class="btn btn-primary">
-        </form>
-        </DIV>
+                <input type="submit" value="Go !"  class="btn btn-primary">
+
+            </form>
             <div style="color:blue; margin: 10px">{{main.status}}</div>
+        </DIV>
+           
 
 
 
