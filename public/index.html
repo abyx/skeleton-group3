@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="app">
+<html ng-app="app"  >
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,33 +17,30 @@
         <script src="/js/view2.js"></script>
 
         <script src="/Lib/bootstrap-gh-pages/ui-bootstrap-custom-tpls-0.14.3.min.js"></script>
+        <style >
+        html{height: 100%}
+
+        </style>
     </head>
 
-    <body ng-controller="TadaCtrlMain as main" >
+
+    <body style="background:-webkit-linear-gradient(top, #e1ffff 0%,#e1ffff 0%,#fdffff 1%,#fdffff 1%,#e1ffff 12%,#e6f8fd 30%,#c8eefb 54%,#bee4f8 75%,#b1d8f5 100%)" ng-controller="TadaCtrlMain as main" >
 
         <DIV STYLE="margin-top: 54px; 
-                    font-family: Arial Black; font-size: 44px; 
-                    color: red" align="center">T<span STYLE="margin-top: 54px; 
-                    font-family: Arial Black; font-size: 24px; 
-                    color:blue ">hink</span>
-                    A<span STYLE="margin-top: 54px; 
-                    font-family: Arial Black; font-size: 24px; 
-                    color:blue ">head   </span>D<span STYLE="margin-top: 54px; 
-                    font-family: Arial Black; font-size: 24px; 
-                    color:blue ">o</span>A<span STYLE="margin-top: 54px; 
-                    font-family: Arial Black; font-size: 24px; 
-                    color:blue ">head</span></div>
+                    font-family: Arial Black; font-size: 54px; 
+                    color: red" align="center">TADA</div>
         <DIV STYLE="margin-top: 34px; 
-                    font-family: Arial Black; font-size: 24px; 
-                    color: #5CB3FF" align="center"> All your Dreams in ONE command line</div>
+                    font-family: Arial Black; font-size: 34px; 
+                    color: black" align="center"> All your Dreams in ONE command line</div>
         <DIV  align="center" STYLE="margin-top: 100px;">
 
+        <form  ng-submit="main.sendClientCommand()" >
             <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()" uib-typeahead="option for option in main.sendAutoComplete($viewValue)" >
-            <input type="button" ng-click="main.sendClientCommand()" value="Go !">
-<<<<<<< HEAD
-=======
+            <input type="submit" value="Go !">
+        </form>
+        </DIV>
             <div style="color:blue; margin: 10px">{{main.status}}</div>
->>>>>>> c62ed8114844b39326c33dcce21d79b17a14adde
+
 
     </body>
 </html>
