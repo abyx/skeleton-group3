@@ -26,11 +26,14 @@ angular.module('app').controller('TadaCtrlMain',function($http, $scope){
 
   self.sendAutoComplete = function() {
       $http.post("/tada/autoComplete", { "clientPartialCommand" : self.clientCommand, "clientCursorPosition" : 0 }).
+
         then(function(response) {
-          self.autoCompleteOptions = response.data;
+              self.autoCompleteOptions = response.data;
         });
 
    };
+
+
 
   $scope.$watch('main.clientCommand', function(newValue) {
       self.status = '';
