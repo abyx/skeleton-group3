@@ -5,7 +5,7 @@ var elasticsearch = require('elasticsearch');
 var _ = require('lodash');
 var app = express();
 
-var client = new elasticsearch.Client({ host: 'localhost:9200', log: 'trace', apiVersion: '2.0' });
+var client = new elasticsearch.Client({ host: '192.168.100.15:9200', log: 'trace', apiVersion: '2.0' });
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -51,6 +51,18 @@ app.post('/tada/autoComplete', function(request, response) {
   var clientCursorPosition = request.body.clientCursorPosition;
   var autoCompleteOptions = getAutoCompleteOptions(clientPartialCommand, clientCursorPosition);
   response.send(autoCompleteOptions);
+});
+
+app.post('/tada/autoCompleteLocation', function(request, response){
+  console.log(request.body.clientPartialCommand);
+  var clientPartialCommand = request.body.clientPartialCommand;
+  getAutoCompleteLocations(clientPartialCommand).then(function(results) {
+ 
+     console.log(results);
+
+    response.send({ "autoCompleteLocations" : results}); 
+  });  
+  
 });
 
 function resultToJson(result) {
@@ -227,6 +239,24 @@ function findMyFilghtBro(flightSearchRequest) {
   }
 }
 
+function getCities(beginLetters)
+{ 
+  return client.search({index: 'tada10', type: 'cities',     
+    body: { 
+            query: {
+                      filtered: {
+                                  filter: {
+                                            prefix: {
+                                                        city : beginLetters
+                                                    }  
+                                          }              
+                                }         
+                    }     
+          }
+        }
+    );  
+}
+
 function getAutoCompleteOptions(clientPartialCommand, clientCursorPosition) {
     if(clientPartialCommand === '') {
       return [ 'book', 'search', 'cancel'];
@@ -267,6 +297,24 @@ function getAutoCompleteOptions(clientPartialCommand, clientCursorPosition) {
     return autoCompleteOptions;
 }
 
+function getAutoCompleteLocations(clientPartialCommand) { 
+
+  var clientPartialCommandWords = clientPartialCommand.split(' ');
+  if(clientPartialCommandWords[clientPartialCommandWords.length - 2] === 'from' ||
+     clientPartialCommandWords[clientPartialCommandWords.length - 2] === 'to') {
+    var locationStartLetters = clientPartialCommandWords[clientPartialCommandWords.length - 1];
+    return getCities(locationStartLetters).then(function(results) {
+      var cities = [];     
+      for(var i = 0 ; i < results.hits.hits.length ; i++) {        
+        var startingStr = clientPartialCommand.substring(0, clientPartialCommand.length - locationStartLetters.length - 1);
+        cities.push(startingStr + ' ' + results.hits.hits[i]._source.city);
+      }      
+      return cities;
+    });
+  }
+
+  return undefined;
+}
 
 app.route('/resources')
   .get(function(request, response) {
