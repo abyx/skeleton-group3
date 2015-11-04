@@ -38,7 +38,9 @@ app.post('/tada/go', function(request, response) {
     response.send(commandResponse);
   }
   else {
-    response.sendStatus(400);  
+    var commandResponse = {error:"'flight' world not found"};
+    console.log(commandResponse);
+    response.status(400).send(commandResponse);  
   }
 });
 
@@ -54,7 +56,6 @@ app.post('/tada/autoComplete', function(request, response) {
 function resultToJson(result) {
   return _.merge({id: result._id}, result._source);
 }
-
 
 function parseClientCommand(clientCommand) {
   var commandWords = clientCommand.split(' ');

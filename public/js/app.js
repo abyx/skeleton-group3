@@ -1,4 +1,4 @@
-angular.module('app', ['ngRoute']);
+angular.module('app', ['ngRoute','ui.bootstrap']);
 
 angular.module('app').config(function($routeProvider) {
   $routeProvider
@@ -24,37 +24,38 @@ angular.module('app').controller('TadaCtrlMain',function($http, $scope){
   var self = this;
   self.clientCommand ='';
 
+<<<<<<< HEAD
    
   self.sendAutoComplete = function() {
       $http.post("/tada/autoComplete", { "clientPartialCommand" : self.clientCommand, "clientCursorPosition" : 0 }).
-        then(function(response) {
-          self.autoCompleteOptions = response.data;
-        });
-
-   };
-
-  $scope.$watch('main.clientCommand', function(newValue) {
+=======
+  self.sendAutoComplete =  function(newValue) {
       self.status = '';
-      if(angular.isDefined(newValue) && newValue[newValue.length - 1] === ' ') {              
-        self.sendAutoComplete();
+      if(angular.isDefined(newValue) && newValue[newValue.length - 1] === ' ') {             
+        return $http.post("/tada/autoComplete", { "clientPartialCommand" : newValue.replace(/\s{2,}/g, ' '), "clientCursorPosition" : 0 }).
+>>>>>>> cf04f4d027e1be1128194a5455872ceeb6a751e2
+        then(function(response) {
+          return response.data;
+        });
+        
       }
-  });
+  };
 
 
   self.sendClientCommand = function(){
-   $http.post("/tada/go", { "clientCommand" : self.clientCommand}).then(function(response){
-               console.log("Success!")
-               console.log(response)
-              // status = parseInt(status)
-               if (response.status == "200" && response.data.message == "") {
-                   console.log("Flight number is : " + response.data.flightNumber);
-                   self.status = "Have A Wonderful Flight , Your Flight number is : " + response.data.flightNumber
-                }
-
-    
- },function(response){
-
- });
+     $http.post("/tada/go", { "clientCommand" : self.clientCommand.replace(/\s{2,}/g, ' ')}).then(function(response){
+                 console.log("Success!")
+                 console.log(response)
+                // status = parseInt(status)
+                 if (response.status == "200" && response.data.message == "") {
+                     console.log("Flight number is : " + response.data.flightNumber);
+                     self.status = "Have A Wonderful Flight , Your Flight number is : " + response.data.flightNumber
+                  }
+      
+      },function(rejection){
+        console.log("Fail!", rejection)
+        self.status = rejection.data.error;
+   });
   };
 
   self.onFocus = function() {     

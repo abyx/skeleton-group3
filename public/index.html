@@ -15,6 +15,8 @@
         <script src="/js/home.js"></script>
         <script src="/js/view1.js"></script>
         <script src="/js/view2.js"></script>
+
+        <script src="/Lib/bootstrap-gh-pages/ui-bootstrap-custom-tpls-0.14.3.min.js"></script>
     </head>
 
     <body ng-controller="TadaCtrlMain as main" >
@@ -26,13 +28,10 @@
                     font-family: Arial Black; font-size: 24px; 
                     color: blue" align="center"> All your Dreams in ONE command line</div>
         <DIV  align="center" STYLE="margin-top: 100px;">
-            <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()">
-            <input type="button" ng-click="main.sendClientCommand()" value="Go !">
-        </DIV>
-        <div  align="center">{{ main.status }}</div>
 
-        <div  align="center">{{ main.autoCompleteOptions }}</div>     
-        
+            <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()" uib-typeahead="option for option in main.sendAutoComplete($viewValue)" >
+            <input type="button" ng-click="main.sendClientCommand()" value="Go !">
+
 
     </body>
 </html>
