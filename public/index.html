@@ -26,15 +26,10 @@
                     color: red" align="center"> TADA</div>
         <DIV  align="center" STYLE="margin-top: 100px;">
 
-           <!-- <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()" uib-typeahead="option for option in main.autoCompleteOptions">-->
-
-
-            <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()" uib-typeahead="option for option in main.mySendAutoComplete($viewValue)" >
+            <input type="text" ng-model="main.clientCommand" ng-trim="false" size="100" ng-focus="main.onFocus()" uib-typeahead="option for option in main.sendAutoComplete($viewValue)" >
             <input type="button" ng-click="main.sendClientCommand()" value="Go !">
+
         </DIV>
         <div  align="center" >{{ main.status }}</div>
-
-        <div  align="center">{{ main.autoCompleteOptions }}</div> 
-
     </body>
 </html>

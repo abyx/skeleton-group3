@@ -24,22 +24,7 @@ angular.module('app').controller('TadaCtrlMain',function($http, $scope){
   var self = this;
   self.clientCommand ='';
 
-  self.sendAutoComplete = function() {
-      $http.post("/tada/autoComplete", { "clientPartialCommand" : self.clientCommand, "clientCursorPosition" : 0 }).
-        then(function(response) {
-          self.autoCompleteOptions = response.data;
-        });
-
-   };
-
-  $scope.$watch('main.clientCommand', function(newValue) {
-      self.status = '';
-      if(angular.isDefined(newValue) && newValue[newValue.length - 1] === ' ') {              
-        self.sendAutoComplete();
-      }
-  });
-
-  self.mySendAutoComplete =  function(newValue) {
+  self.sendAutoComplete =  function(newValue) {
       self.status = '';
       if(angular.isDefined(newValue) && newValue[newValue.length - 1] === ' ') {             
         return $http.post("/tada/autoComplete", { "clientPartialCommand" : newValue.replace(/\s{2,}/g, ' '), "clientCursorPosition" : 0 }).

@@ -57,18 +57,8 @@ function resultToJson(result) {
   return _.merge({id: result._id}, result._source);
 }
 
-/*Array.prototype.removeEmptyCells = function() 
-{
-  for (var i = 0; i < this.length; i++) {
-    if (this[i] == null || this[i] == '')
-    {
-      this.splice(i,1);
-    }
-  };
-}*/
-
 function parseClientCommand(clientCommand) {
-  var commandWords = clientCommand.split(' ');//.removeEmptyCells();
+  var commandWords = clientCommand.split(' ');
   var commandResponse;
   try {
     switch(commandWords[0]) {
