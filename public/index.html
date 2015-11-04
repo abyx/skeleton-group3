@@ -40,7 +40,11 @@
                 <input type="submit" value="Go !"  class="btn btn-primary">
 
             </form>
-            <div style="color:blue; margin: 10px">{{main.status}}</div>
+            <div style="color:blue; margin: 20px">{{main.status}}</div>
+            <div ng-show="main.status" >
+                <img src="images/success.png" ng-show="main.success">
+                <img src="images/crash.png" ng-hide="main.success">
+            </div>
         </DIV>
            
 

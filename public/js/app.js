@@ -62,11 +62,13 @@ angular.module('app').controller('TadaCtrlMain',function($http, $scope){
                  if (response.status == "200" && response.data.message == "") {
                      console.log("Flight number is : " + response.data.flightNumber);
                      self.status = "Have A Wonderful Flight , Your Flight number is : " + response.data.flightNumber
+                     self.success = true
                   }
       
       },function(rejection){
         console.log("Fail!", rejection)
         self.status = rejection.data.error;
+        self.success = false
    });
   };
 
