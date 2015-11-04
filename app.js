@@ -34,11 +34,17 @@ app.post('/tada/go', function(request, response) {
   var clientCommand = request.body.clientCommand;
   if(isFlightInText(clientCommand)) {
     //response.sendStatus(200);
+
     var commandResponse = parseClientCommand(clientCommand);
-    response.send(commandResponse);
+    if (commandResponse.status) {
+     response.send(commandResponse);
+    }
+    else {
+      response.status(400).send(commandResponse);  
+    }
   }
   else {
-    var commandResponse = {error:"'flight' world not found"};
+    var commandResponse = {message:"syntax error 'flight' word not found"};
     console.log(commandResponse);
     response.status(400).send(commandResponse);  
   }
@@ -117,7 +123,7 @@ function getBookFlightErrorMessage(bookingRequest)
 {
   if(bookingRequest.origin == null || !isLocationExist(bookingRequest.origin))
   {
-    return "The original location is missing";
+    return "The origin location is missing";
   }
   else if(bookingRequest.destination == null || !isLocationExist(bookingRequest.destination))
   {
@@ -133,7 +139,7 @@ function getBookFlightErrorMessage(bookingRequest)
   }
   else if(bookingRequest.maxPrice == null)
   {
-    return "The price is missing";
+    return "The maxprice is missing";
   }
 }
 
@@ -163,7 +169,7 @@ function parseBookingRequest(commandWords) {
    var bookingRequest = new Object();
    
    if(commandWords[1] !== 'flight') {
-      throw "'flight' world not found";
+      throw "syntax error 'flight' word not found";
    }
 
 

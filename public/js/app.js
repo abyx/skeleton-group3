@@ -67,7 +67,7 @@ angular.module('app').controller('TadaCtrlMain',function($http, $scope){
       
       },function(rejection){
         console.log("Fail!", rejection)
-        self.status = rejection.data.error;
+        self.status = rejection.data.message;
         self.success = false
    });
   };
