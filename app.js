@@ -53,14 +53,11 @@ app.post('/tada/autoComplete', function(request, response) {
   response.send(autoCompleteOptions);
 });
 
-app.post('/tada/autoCompleteLocation', function(request, response){
+app.post('/tada/autoCompleteLocations', function(request, response){
   console.log(request.body.clientPartialCommand);
   var clientPartialCommand = request.body.clientPartialCommand;
   getAutoCompleteLocations(clientPartialCommand).then(function(results) {
- 
-     console.log(results);
-
-    response.send({ "autoCompleteLocations" : results}); 
+    response.send(results); 
   });  
   
 });

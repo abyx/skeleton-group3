@@ -26,11 +26,30 @@ angular.module('app').controller('TadaCtrlMain',function($http, $scope){
 
   self.sendAutoComplete =  function(newValue) {
       self.status = '';
-      if(angular.isDefined(newValue) && newValue[newValue.length - 1] === ' ') {             
-        return $http.post("/tada/autoComplete", { "clientPartialCommand" : newValue.replace(/\s{2,}/g, ' '), "clientCursorPosition" : 0 }).
-        then(function(response) {
-          return response.data;
-        });
+      var words = [];
+      if (newValue != null && newValue.length > 0) 
+        {
+          words = newValue.replace(/\s{2,}/g, ' ').split(' ');
+          console.log(words);
+        };
+      console.log((angular.isDefined(newValue) && newValue[newValue.length - 1] === ' ') || (words.length > 0 && (words[words.length-2] == 'from' || words[words.length-2] == 'to')),words[words.length-2]);
+      if((angular.isDefined(newValue) && newValue[newValue.length - 1] === ' ') || (words.length > 0 && (words[words.length-2] == 'from' || words[words.length-2] == 'to'))) {
+        if (words.length > 0 && (words[words.length-2] == 'from' || words[words.length-2] == 'to')) 
+          {
+            console.log('from or to')
+            return $http.post("/tada/autoCompleteLocations", { "clientPartialCommand" : newValue.replace(/\s{2,}/g, ' '), "clientCursorPosition" : 0 }).
+            then(function(response) {
+              console.log('from or to response=',response);
+              return response.data;
+            });
+          }
+          else
+          {            
+            return $http.post("/tada/autoComplete", { "clientPartialCommand" : newValue.replace(/\s{2,}/g, ' '), "clientCursorPosition" : 0 }).
+            then(function(response) {
+              return response.data;
+            });
+          }
       }
   };
 
