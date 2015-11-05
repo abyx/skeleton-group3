@@ -34,13 +34,15 @@ app.post('/tada/go', function(request, response) {
   var clientCommand = request.body.clientCommand;
   if(isFlightInText(clientCommand)) {    
 
-    var commandResponse = parseClientCommand(clientCommand);
-    if (commandResponse.status) {
-     response.send(commandResponse);
-    }
-    else {
-      response.status(400).send(commandResponse);  
-    }
+    parseClientCommand(clientCommand).then(function(commandResponse) {
+        if (commandResponse.status) {
+           response.send(commandResponse);
+          }
+        else {
+          response.status(400).send(commandResponse);  
+        }
+    });
+    
   }
   else {
     var commandResponse = {message:"syntax error 'flight' word not found"};
