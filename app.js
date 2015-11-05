@@ -102,6 +102,8 @@ function parseClientCommand(clientCommand) {
 
 function bookFlight(bookingRequest)
 {
+
+
   if (bookingRequest.origin != null && bookingRequest.originValid && 
       bookingRequest.destination != null && bookingRequest.destinationValid &&
       bookingRequest.departureDate != null && bookingRequest.returnDate != null &&
@@ -114,20 +116,27 @@ function bookFlight(bookingRequest)
     var result = {
                     status: false,
                     message: getBookFlightErrorMessage(bookingRequest),
-                    flightNumber: "" };    
+                    flightNumber: "",
+                    didYouMeadOptions : bookingRequest.didYouMeadOptions };    
+
+                    console.log(result);
     return result;
   }
 }
 
 function getBookFlightErrorMessage(bookingRequest)
 {
-  if(bookingRequest.origin == null || !bookingRequest.originValid)
-  {
+  if(bookingRequest.origin == null ) {
     return "The origin location is missing";
   }
-  else if(bookingRequest.destination == null || !bookingRequest.destinationValid)
-  {
+  else if(!bookingRequest.originValid) {
+    return "The origin location is invalid";
+  }
+  else if(bookingRequest.destination == null) {
     return "The destination location is missing";
+  }
+  else if(!bookingRequest.destinationValid) {
+    return "The destination location is invalid"; 
   }
   else if(bookingRequest.departureDate == null || bookingRequest.returnDate == null)
   {
