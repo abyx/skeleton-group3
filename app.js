@@ -104,8 +104,6 @@ function parseClientCommand(clientCommand) {
 
 function bookFlight(bookingRequest)
 {
-
-
   if (bookingRequest.origin != null && bookingRequest.originValid && 
       bookingRequest.destination != null && bookingRequest.destinationValid &&
       bookingRequest.departureDate != null && bookingRequest.returnDate != null &&
@@ -119,7 +117,7 @@ function bookFlight(bookingRequest)
                     status: false,
                     message: getBookFlightErrorMessage(bookingRequest),
                     flightNumber: "",
-                    didYouMeadOptions : bookingRequest.didYouMeadOptions };    
+                    didYouMeanOptions : bookingRequest.didYouMeanOptions };    
 
                     console.log(result);
     return result;
@@ -363,25 +361,26 @@ function doFuzzyQuery(locationName) {
 function checkOriginAndDestination(bookingRequest) {  
   return checkLocation(bookingRequest.origin).then(function(result){           
      if(!(bookingRequest.originValid = (result.hits.hits.length >= 1))) {        
-        return buildDidYouMead(bookingRequest);
+        return buildDidYouMean(bookingRequest);
      }
      else {
       return checkLocation(bookingRequest.destination).then(function(result){
         if(!(bookingRequest.destinationValid = (result.hits.hits.length >= 1))) {
-          return buildDidYouMead(bookingRequest);
+          return buildDidYouMean(bookingRequest);
         }
+        return bookingRequest;
       });
      }
   });
 }
 
-function buildDidYouMead(bookingRequest) {
+function buildDidYouMean(bookingRequest) {
   if(!bookingRequest.originValid) {
     return doFuzzyQuery(bookingRequest.origin).then(function(results) {
         if(results !== undefined && results.hits !== undefined && results.hits.hits !== undefined) {
-          bookingRequest.didYouMeadOptions = [];
+          bookingRequest.didYouMeanOptions = [];
           for(var i = 0 ; i < results.hits.hits.length ; i++ ) {
-            bookingRequest.didYouMeadOptions[i] = { sentence : bookingRequest.clientCommand.replace(bookingRequest.origin, results.hits.hits[i]._source.city)};
+            bookingRequest.didYouMeanOptions[i] = { sentence : bookingRequest.clientCommand.replace(bookingRequest.origin, results.hits.hits[i]._source.city)};
           }
         }
 
@@ -392,9 +391,9 @@ function buildDidYouMead(bookingRequest) {
   else if(!bookingRequest.destinationValid) {
     return doFuzzyQuery(bookingRequest.destination).then(function(results) {
         if(results !== undefined && results.hits !== undefined && results.hits.hits !== undefined) {
-          bookingRequest.didYouMeadOptions = [];
+          bookingRequest.didYouMeanOptions = [];
           for(var i = 0 ; i < results.hits.hits.length ; i++ ) {
-            bookingRequest.didYouMeadOptions[i] = { sentence : bookingRequest.clientCommand.replace(bookingRequest.destination, results.hits.hits[i]._source.city)};
+            bookingRequest.didYouMeanOptions[i] = { sentence : bookingRequest.clientCommand.replace(bookingRequest.destination, results.hits.hits[i]._source.city)};
           }
         }
 
