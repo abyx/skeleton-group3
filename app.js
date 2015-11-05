@@ -32,8 +32,7 @@ app.post('/tada/go', function(request, response) {
   console.log(request.body.clientCommand);
 
   var clientCommand = request.body.clientCommand;
-  if(isFlightInText(clientCommand)) {
-    //response.sendStatus(200);
+  if(isFlightInText(clientCommand)) {    
 
     var commandResponse = parseClientCommand(clientCommand);
     if (commandResponse.status) {
@@ -73,28 +72,25 @@ function resultToJson(result) {
 }
 
 function parseClientCommand(clientCommand) {
-  var commandWords = clientCommand.split(' ');
-  var commandResponse;
+  var commandWords = clientCommand.split(' ');  
   try {
     switch(commandWords[0]) {
       case 'book' :
-        var bookingRequest = parseBookingRequest(commandWords);        
-        commandResponse = bookFlight(bookingRequest);
-        break;
-
+        var bookingRequest = parseBookingRequest(commandWords);
+        bookingRequest.clientCommand = clientCommand;
+        return checkOriginAndDestination(bookingRequest).then(function(bookResult){
+          return bookFlight(bookResult);
+        });
 
     case 'search' :
        console.log("in case search flight " );
-       var searchFlightRequest = parseSearchFlightRequest(commandWords);
-   
-       commandResponse = findMyFilghtBro(searchFlightRequest);
-       console.log("redirect URL is : " + commandResponse);
+       var searchFlightRequest = parseSearchFlightRequest(commandWords);   
+       return findMyFilghtBro(searchFlightRequest);       
      break;
       
       case 'cancel' :
         break;
-    }    
-    return commandResponse;
+    }
   }
   catch(err) {
 
@@ -106,8 +102,8 @@ function parseClientCommand(clientCommand) {
 
 function bookFlight(bookingRequest)
 {
-  if (bookingRequest.origin != null && isLocationExist(bookingRequest.origin) && 
-      bookingRequest.destination != null && isLocationExist(bookingRequest.destination) &&
+  if (bookingRequest.origin != null && bookingRequest.originValid && 
+      bookingRequest.destination != null && bookingRequest.destinationValid &&
       bookingRequest.departureDate != null && bookingRequest.returnDate != null &&
       bookingRequest.pax != null && bookingRequest.maxPrice != null)
   {
@@ -115,17 +111,21 @@ function bookFlight(bookingRequest)
   }
   else
   {
-    return {status:false,message:getBookFlightErrorMessage(bookingRequest),flightNumber:""};
+    var result = {
+                    status: false,
+                    message: getBookFlightErrorMessage(bookingRequest),
+                    flightNumber: "" };    
+    return result;
   }
 }
 
 function getBookFlightErrorMessage(bookingRequest)
 {
-  if(bookingRequest.origin == null || !isLocationExist(bookingRequest.origin))
+  if(bookingRequest.origin == null || !bookingRequest.originValid)
   {
     return "The origin location is missing";
   }
-  else if(bookingRequest.destination == null || !isLocationExist(bookingRequest.destination))
+  else if(bookingRequest.destination == null || !bookingRequest.destinationValid)
   {
     return "The destination location is missing";
   }
@@ -244,7 +244,7 @@ function findMyFilghtBro(flightSearchRequest) {
 
 function getCities(beginLetters)
 { 
-  return client.search({index: 'tada10', type: 'cities',     
+  return client.search({index: 'tada11', type: 'cities',     
     body: { 
             query: {
                       filtered: {
@@ -282,11 +282,11 @@ function getAutoCompleteOptions(clientPartialCommand, clientCursorPosition) {
     }
 
     if(clientPartialCommandWords[clientPartialCommandWords.length - 2] === 'return') {
-      return [clientPartialCommand + ' ' + ' on'];
+      return [clientPartialCommand + ' on'];
     }
 
     if(clientPartialCommandWords[clientPartialCommandWords.length - 3] === 'for') {
-      return [clientPartialCommand + ' ' + ' passangers'];
+      return [clientPartialCommand + ' passangers'];
     }    
     
     var autoCompleteOptions = [];
@@ -317,6 +317,82 @@ function getAutoCompleteLocations(clientPartialCommand) {
   }
 
   return undefined;
+}
+
+function checkLocation(locationName) {
+
+  return client.search({
+            index:'tada11',
+            type:'cities',
+            q: 'city: ' + locationName });
+
+
+}
+
+function doFuzzyQuery(locationName) {
+  return client.search(
+  {
+  index: 'tada11', type: 'cities',     
+      body: { 
+            query: {
+                match:{
+                          city: {
+                                    query: locationName,
+                                           "fuzziness": 5,
+                                           "prefix_length": 1,
+                           
+                                          }              
+                          }         
+                   }   
+              }  
+    }
+);  
+}
+
+function checkOriginAndDestination(bookingRequest) {  
+  return checkLocation(bookingRequest.origin).then(function(result){           
+     if(!(bookingRequest.originValid = (result.hits.hits.length >= 1))) {        
+        return buildDidYouMead(bookingRequest);
+     }
+     else {
+      return checkLocation(bookingRequest.destination).then(function(result){
+        if(!(bookingRequest.destinationValid = (result.hits.hits.length >= 1))) {
+          return buildDidYouMead(bookingRequest);
+        }
+      });
+     }
+  });
+}
+
+function buildDidYouMead(bookingRequest) {
+  if(!bookingRequest.originValid) {
+    return doFuzzyQuery(bookingRequest.origin).then(function(results) {
+        if(results !== undefined && results.hits !== undefined && result.hits.hits !== undefined) {
+          bookingRequest.didYouMeadOptions = [];
+          for(var i = 0 ; i < results.hits.hits.length ; i++ ) {
+            bookingRequest.didYouMeadOptions[i] = { sentence : bookingRequest.clientCommand.replace(bookingRequest.origin, results.hits.hits[i]._source.city)};
+          }
+        }
+
+        console.log(bookingRequest);
+        return bookingRequest;
+    });
+  }
+  else if(!bookingRequest.destinationValid) {
+    return doFuzzyQuery(bookingRequest.destination).then(function(results) {
+        if(results !== undefined && results.hits !== undefined && results.hits.hits !== undefined) {
+          bookingRequest.didYouMeadOptions = [];
+          for(var i = 0 ; i < results.hits.hits.length ; i++ ) {
+            bookingRequest.didYouMeadOptions[i] = { sentence : bookingRequest.clientCommand.replace(bookingRequest.destination, results.hits.hits[i]._source.city)};
+          }
+        }
+
+        console.log(bookingRequest);
+        return bookingRequest;
+    });
+  }
+
+
 }
 
 app.route('/resources')
