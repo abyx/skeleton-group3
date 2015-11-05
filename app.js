@@ -77,8 +77,9 @@ function parseClientCommand(clientCommand) {
     switch(commandWords[0]) {
       case 'book' :
         var bookingRequest = parseBookingRequest(commandWords);
-        return checkOriginAndDestination(bookingRequest).then(function(bookingRequest){
-          return bookFlight(bookingRequest);
+        bookingRequest.clientCommand = clientCommand;
+        return checkOriginAndDestination(bookingRequest).then(function(bookResult){
+          return bookFlight(bookResult);
         });
 
     case 'search' :
@@ -281,11 +282,11 @@ function getAutoCompleteOptions(clientPartialCommand, clientCursorPosition) {
     }
 
     if(clientPartialCommandWords[clientPartialCommandWords.length - 2] === 'return') {
-      return [clientPartialCommand + ' ' + ' on'];
+      return [clientPartialCommand + ' on'];
     }
 
     if(clientPartialCommandWords[clientPartialCommandWords.length - 3] === 'for') {
-      return [clientPartialCommand + ' ' + ' passangers'];
+      return [clientPartialCommand + ' passangers'];
     }    
     
     var autoCompleteOptions = [];
@@ -351,16 +352,47 @@ function doFuzzyQuery(locationName) {
 function checkOriginAndDestination(bookingRequest) {  
   return checkLocation(bookingRequest.origin).then(function(result){           
      if(!(bookingRequest.originValid = (result.hits.hits.length >= 1))) {        
-        return bookingRequest;
+        return buildDidYouMead(bookingRequest);
      }
      else {
       return checkLocation(bookingRequest.destination).then(function(result){
         if(!(bookingRequest.destinationValid = (result.hits.hits.length >= 1))) {
-          return bookingRequest;
+          return buildDidYouMead(bookingRequest);
         }
       });
      }
   });
+}
+
+function buildDidYouMead(bookingRequest) {
+  if(!bookingRequest.originValid) {
+    return doFuzzyQuery(bookingRequest.origin).then(function(results) {
+        if(results !== undefined && results.hits !== undefined && result.hits.hits !== undefined) {
+          bookingRequest.didYouMeadOptions = [];
+          for(var i = 0 ; i < results.hits.hits.length ; i++ ) {
+            bookingRequest.didYouMeadOptions[i] = { sentence : bookingRequest.clientCommand.replace(bookingRequest.origin, results.hits.hits[i]._source.city)};
+          }
+        }
+
+        console.log(bookingRequest);
+        return bookingRequest;
+    });
+  }
+  else if(!bookingRequest.destinationValid) {
+    return doFuzzyQuery(bookingRequest.destination).then(function(results) {
+        if(results !== undefined && results.hits !== undefined && results.hits.hits !== undefined) {
+          bookingRequest.didYouMeadOptions = [];
+          for(var i = 0 ; i < results.hits.hits.length ; i++ ) {
+            bookingRequest.didYouMeadOptions[i] = { sentence : bookingRequest.clientCommand.replace(bookingRequest.destination, results.hits.hits[i]._source.city)};
+          }
+        }
+
+        console.log(bookingRequest);
+        return bookingRequest;
+    });
+  }
+
+
 }
 
 app.route('/resources')
