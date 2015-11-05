@@ -41,10 +41,13 @@
 
             </form>
             <div style="color:blue; margin: 20px">{{main.status}}</div>
-            <div ng-show="main.didYouMean.length > 0">
-                <ul>                    
-                    <li ng-repeat="didYouMean  in  main.didYouMean">{{  didYouMean.sentence   }}</li>   
-                </ul>
+            <div ng-show="main.didYouMean.length > 0"> 
+                <DIV STYLE="margin-top: 34px; 
+                    font-family: Arial Black; font-size: 20px; 
+                    color: red" align="center">Did you mean:</div>            
+                <div ng-repeat="didYouMean  in  main.didYouMean">
+                    <a href ng-click="main.didYouMeanOptionClicked(didYouMean.sentence)">{{  didYouMean.sentence   }}</a>
+                </div>
             </div>
             <div ng-show="main.status" >
                 <img src="images/success.png" ng-show="main.success">
