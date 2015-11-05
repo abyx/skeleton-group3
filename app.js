@@ -319,6 +319,14 @@ function getAutoCompleteLocations(clientPartialCommand) {
   return undefined;
 }
 
+function checkLocation(locationName) {
+  // TODO: Exact Search in Elastic
+}
+
+function doFuzzyQuery(locationName) {
+  // TODO: Fuzzy Search in Elastic
+}
+
 app.route('/resources')
   .get(function(request, response) {
     client.search({
