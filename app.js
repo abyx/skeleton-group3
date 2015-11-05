@@ -376,7 +376,7 @@ function checkOriginAndDestination(bookingRequest) {
 function buildDidYouMead(bookingRequest) {
   if(!bookingRequest.originValid) {
     return doFuzzyQuery(bookingRequest.origin).then(function(results) {
-        if(results !== undefined && results.hits !== undefined && result.hits.hits !== undefined) {
+        if(results !== undefined && results.hits !== undefined && results.hits.hits !== undefined) {
           bookingRequest.didYouMeadOptions = [];
           for(var i = 0 ; i < results.hits.hits.length ; i++ ) {
             bookingRequest.didYouMeadOptions[i] = { sentence : bookingRequest.clientCommand.replace(bookingRequest.origin, results.hits.hits[i]._source.city)};
