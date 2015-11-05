@@ -32,8 +32,7 @@ app.post('/tada/go', function(request, response) {
   console.log(request.body.clientCommand);
 
   var clientCommand = request.body.clientCommand;
-  if(isFlightInText(clientCommand)) {
-    //response.sendStatus(200);
+  if(isFlightInText(clientCommand)) {    
 
     var commandResponse = parseClientCommand(clientCommand);
     if (commandResponse.status) {
@@ -73,28 +72,24 @@ function resultToJson(result) {
 }
 
 function parseClientCommand(clientCommand) {
-  var commandWords = clientCommand.split(' ');
-  var commandResponse;
+  var commandWords = clientCommand.split(' ');  
   try {
     switch(commandWords[0]) {
       case 'book' :
-        var bookingRequest = parseBookingRequest(commandWords);        
-        commandResponse = bookFlight(bookingRequest);
-        break;
-
+        var bookingRequest = parseBookingRequest(commandWords);
+        return checkOriginAndDestination(bookingRequest).then(function(bookingRequest){
+          return bookFlight(bookingRequest);
+        });
 
     case 'search' :
        console.log("in case search flight " );
-       var searchFlightRequest = parseSearchFlightRequest(commandWords);
-   
-       commandResponse = findMyFilghtBro(searchFlightRequest);
-       console.log("redirect URL is : " + commandResponse);
+       var searchFlightRequest = parseSearchFlightRequest(commandWords);   
+       return findMyFilghtBro(searchFlightRequest);       
      break;
       
       case 'cancel' :
         break;
-    }    
-    return commandResponse;
+    }
   }
   catch(err) {
 
@@ -106,8 +101,8 @@ function parseClientCommand(clientCommand) {
 
 function bookFlight(bookingRequest)
 {
-  if (bookingRequest.origin != null && isLocationExist(bookingRequest.origin) && 
-      bookingRequest.destination != null && isLocationExist(bookingRequest.destination) &&
+  if (bookingRequest.origin != null && bookingRequest.originValid && 
+      bookingRequest.destination != null && bookingRequest.destinationValid &&
       bookingRequest.departureDate != null && bookingRequest.returnDate != null &&
       bookingRequest.pax != null && bookingRequest.maxPrice != null)
   {
@@ -115,17 +110,21 @@ function bookFlight(bookingRequest)
   }
   else
   {
-    return {status:false,message:getBookFlightErrorMessage(bookingRequest),flightNumber:""};
+    var result = {
+                    status: false,
+                    message: getBookFlightErrorMessage(bookingRequest),
+                    flightNumber: "" };    
+    return result;
   }
 }
 
 function getBookFlightErrorMessage(bookingRequest)
 {
-  if(bookingRequest.origin == null || !isLocationExist(bookingRequest.origin))
+  if(bookingRequest.origin == null || !bookingRequest.originValid)
   {
     return "The origin location is missing";
   }
-  else if(bookingRequest.destination == null || !isLocationExist(bookingRequest.destination))
+  else if(bookingRequest.destination == null || !bookingRequest.destinationValid)
   {
     return "The destination location is missing";
   }
@@ -244,7 +243,7 @@ function findMyFilghtBro(flightSearchRequest) {
 
 function getCities(beginLetters)
 { 
-  return client.search({index: 'tada10', type: 'cities',     
+  return client.search({index: 'tada11', type: 'cities',     
     body: { 
             query: {
                       filtered: {
@@ -320,11 +319,26 @@ function getAutoCompleteLocations(clientPartialCommand) {
 }
 
 function checkLocation(locationName) {
-  // TODO: Exact Search in Elastic
+  // TODO: Exact Search in Elastic  
 }
 
 function doFuzzyQuery(locationName) {
   // TODO: Fuzzy Search in Elastic
+}
+
+function checkOriginAndDestination(bookingRequest) {  
+  return checkLocation(bookingRequest.origin).then(function(result){     
+     if(!(bookingRequest.originValid = (result.hits.hits.length === 1))) {
+        return bookingRequest;
+     }
+     else {
+      return checkLocation(bookingRequest.destination).then(function(result){
+        if(!(bookingRequest.destinationValid = (result.hits.hits.length === 1))) {
+          return bookingRequest;
+        }
+      });
+     }
+  });
 }
 
 app.route('/resources')
