@@ -67,10 +67,20 @@ angular.module('app').controller('TadaCtrlMain',function($http, $scope){
       
       },function(rejection){
         console.log("Fail!", rejection)
+        if (rejection.data.didYouMeanOptions != null && rejection.data.didYouMeanOptions.length > 0) {
+          self.didYouMean = rejection.data.didYouMeanOptions;
+        };
         self.status = rejection.data.message;
         self.success = false
    });
   };
+
+  self.didYouMeanOptionClicked = function(sentence){
+    console.log('didYouMeanOptionClicked');
+    self.clientCommand = sentence;
+    self.sendClientCommand();
+    self.didYouMean = null;
+  }
 
   self.onFocus = function() {     
     if(self.clientCommand.length === 0) {      
