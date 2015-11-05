@@ -67,6 +67,9 @@ angular.module('app').controller('TadaCtrlMain',function($http, $scope){
       
       },function(rejection){
         console.log("Fail!", rejection)
+        if (didYouMeanOptions != null && didYouMeanOptions.length > 0) {
+          self.didYouMean = didYouMeanOptions;
+        };
         self.status = rejection.data.message;
         self.success = false
    });

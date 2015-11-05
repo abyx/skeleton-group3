@@ -41,6 +41,11 @@
 
             </form>
             <div style="color:blue; margin: 20px">{{main.status}}</div>
+            <div ng-show="main.didYouMean.length > 0">
+                <ul>                    
+                    <li ng-repeat="didYouMean  in  main.didYouMean">{{  didYouMean.sentence   }}</li>   
+                </ul>
+            </div>
             <div ng-show="main.status" >
                 <img src="images/success.png" ng-show="main.success">
                 <img src="images/crash.png" ng-hide="main.success">
