@@ -319,11 +319,34 @@ function getAutoCompleteLocations(clientPartialCommand) {
 }
 
 function checkLocation(locationName) {
-  // TODO: Exact Search in Elastic  
+
+  client.search({
+            index:'tada11',
+            type:'cities',
+            q:'city:locationName' }).then(function(resources)
+            {console.log('Found  object:',resources.hits.hits);})
+
+
 }
 
 function doFuzzyQuery(locationName) {
-  // TODO: Fuzzy Search in Elastic
+  return client.search(
+  {
+  index: 'tada11', type: 'cities',     
+      body: { 
+            query: {
+                match:{
+                          city: {
+                                    query: locationName,
+                                           "fuzziness": 5,
+                                           "prefix_length": 1,
+                           
+                                          }              
+                          }         
+                   }   
+              }  
+    }
+);  
 }
 
 function checkOriginAndDestination(bookingRequest) {  

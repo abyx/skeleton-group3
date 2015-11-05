@@ -11,7 +11,24 @@ client.search({
             {console.log('Found  object:',resources.hits.hits);})
 
 */
-
+/*
+client.search(
+ 	{
+ 	index: 'tada11', type: 'cities',     
+    	
+            query: {
+        	    	fuzzy:{
+            	        	  city: {
+                	                  value: "burlin",
+                                           "fuzziness": 2
+      									   
+                                          }              
+                          }         
+                   }   
+         
+    }
+);  
+*/
 
  client.search(
  	{
@@ -20,13 +37,14 @@ client.search({
             query: {
         	    	match:{
             	        	  city: {
-                	                  query: "burlin",
-                                           "fuzziness": 20,
-      									   "prefix_length": 1
+                	                  query: "brelin",
+                                           "fuzziness": 5,
+      									   "prefix_length": 1,
+      									   
                                           }              
                           }         
                    }   
               }  
     }
 );  
-            
+
