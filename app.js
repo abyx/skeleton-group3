@@ -320,11 +320,10 @@ function getAutoCompleteLocations(clientPartialCommand) {
 
 function checkLocation(locationName) {
 
-  client.search({
+  return client.search({
             index:'tada11',
             type:'cities',
-            q:'city:locationName' }).then(function(resources)
-            {console.log('Found  object:',resources.hits.hits);})
+            q: 'city: ' + locationName });
 
 
 }
@@ -350,13 +349,13 @@ function doFuzzyQuery(locationName) {
 }
 
 function checkOriginAndDestination(bookingRequest) {  
-  return checkLocation(bookingRequest.origin).then(function(result){     
-     if(!(bookingRequest.originValid = (result.hits.hits.length === 1))) {
+  return checkLocation(bookingRequest.origin).then(function(result){           
+     if(!(bookingRequest.originValid = (result.hits.hits.length >= 1))) {        
         return bookingRequest;
      }
      else {
       return checkLocation(bookingRequest.destination).then(function(result){
-        if(!(bookingRequest.destinationValid = (result.hits.hits.length === 1))) {
+        if(!(bookingRequest.destinationValid = (result.hits.hits.length >= 1))) {
           return bookingRequest;
         }
       });
